@@ -3,7 +3,7 @@ const webpack = require('webpack')
 
 module.exports = {
   entry: {
-    loadApp: './loadApp'
+    loadApp: './app/loadApp'
   },
   output: {
     path: path.resolve(__dirname, 'chrome_ext/dist'),

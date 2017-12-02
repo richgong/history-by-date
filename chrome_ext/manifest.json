@@ -7,7 +7,9 @@
     "default_title": "ReplyWiki",
     "default_popup": "front/popup.html"
   },
+  "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:3000 'unsafe-eval'; connect-src http://localhost:3000",
   "permissions": [
+    "history",
     "storage"
   ],
   "web_accessible_resources": [ "front/*", "dist/*" ],
