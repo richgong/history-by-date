@@ -1,0 +1,17 @@
+{
+  "name": "History by Day",
+  "version": "1",
+  "manifest_version": 2,
+  "browser_action": {
+    "default_icon": "dist/logo_128.png",
+    "default_title": "ReplyWiki",
+    "default_popup": "front/popup.html"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "web_accessible_resources": [ "front/*", "dist/*" ],
+  "icons": {
+    "128": "dist/logo_128.png"
+  }
+}
