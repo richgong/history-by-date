@@ -32,7 +32,6 @@ function getHistory(options, callback) {
 // sanitize
 
 function sanitizeRange(results, options) {
-  console.log(results, options)
   let out = []
   for (let result of results) {
     if (result) {
@@ -88,8 +87,12 @@ function groom(results) {
 
 function getDomain(url) {
   let match = url.match(/\w+:\/\/(.*?)\//)
-  if (match)
-    return match[0]
+  if (match) {
+    match = match[1]
+    if (match.startsWith('www.'))
+      match = match.substring(4)
+    return match
+  }
   return null
 }
 
@@ -107,7 +110,7 @@ function calculateMB(bytes) {
 }
 
 
-export function getDayHistory(date, callback) {
+export function getDayHistory(date, text, callback) {
   date.setHours(0,0,0,0)
   let startTime = date.getTime()
 
@@ -115,9 +118,9 @@ export function getDayHistory(date, callback) {
   let endTime = date.getTime()
 
   let options = {
-    startTime: startTime,
-    endTime: endTime,
-    text: '',
+    startTime,
+    endTime,
+    text,
     maxResults: 5000
   }
   getHistory(options,

@@ -18,3 +18,10 @@
 h1 small {
     font-size: 0.5em;
 }
+
+table.event td {
+    vertical-align: top;
+}
+table.event td {
+    padding-bottom: 20px;
+}
