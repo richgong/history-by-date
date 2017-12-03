@@ -1,6 +1,6 @@
-# history-by-day
+# history-by-date
 
-A Chrome extension that lets you browse your history by day, instead of infinite scroll.
+A Chrome extension that lets you browse your history by date, instead of infinite scroll.
 
 ## Why?
 
@@ -13,7 +13,7 @@ open-source, but was sold, and then made closed-source. Giving my Chrome history
 extension made me nervous. And for good reason, because at one point, Better History was [hijacking your browser to
 display ads](https://hotforsecurity.bitdefender.com/blog/better-history-chrome-extension-goes-rogue-hijacks-browsers-and-displays-ads-13674.html).
 
-So I made this. An open-source extension for browsing your history by day.
+So I made this. An open-source extension for browsing your history by date.
 
 
 ## Run in development

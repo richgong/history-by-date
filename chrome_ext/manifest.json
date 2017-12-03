@@ -1,5 +1,5 @@
 {
-  "name": "History by Day",
+  "name": "History by Date",
   "version": "1",
   "manifest_version": 2,
   "browser_action": {

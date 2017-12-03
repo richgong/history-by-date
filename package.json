@@ -1,7 +1,7 @@
 {
-  "name": "history-by-day",
+  "name": "history-by-date",
   "version": "1.0.0",
-  "description": "A Chrome extension for browsing history by day",
+  "description": "A Chrome extension for browsing history by date",
   "main": "App.js",
   "scripts": {
     "start": "NODE_ENV=development node hotload.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/freeauto/history-by-day.git"
+    "url": "git+https://github.com/freeauto/history-by-date.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/freeauto/history-by-day/issues"
+    "url": "https://github.com/freeauto/history-by-date/issues"
   },
-  "homepage": "https://github.com/freeauto/history-by-day#readme",
+  "homepage": "https://github.com/freeauto/history-by-date#readme",
   "dependencies": {
     "babel-core": "^6.24.1",
     "babel-loader": "^6.4.1",
