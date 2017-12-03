@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 
 const IS_PROD = (process.env.NODE_ENV == 'production')
@@ -83,6 +84,10 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     }),
-    extractText
+    extractText,
+    new HtmlWebpackPlugin({
+      template: './app/index.ejs',
+      filename: 'index.html'
+    })
   ]
 }

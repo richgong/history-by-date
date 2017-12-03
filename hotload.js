@@ -5,7 +5,7 @@ var express = require('express')
 var config = require('./webpack.config')
 
 var port = 3000
-var publicPath = '/dist/'
+var publicPath = '/'
 
 var entry = config.entry;
 for (var key in entry) {
@@ -41,7 +41,7 @@ app.use(require('webpack-hot-middleware')(compiled))
 
 //app.get('/', function(req, res) { res.sendFile(path.resolve(__dirname, 'chrome_ext/front/index.html')) });
 
-//app.use('/', express.static('chrome_ext/'))
+app.use('/', express.static('chrome_ext/'))
 
 
 app.listen(port, 'localhost', function(err) {

@@ -135,6 +135,10 @@ export default class App extends React.Component {
       date
     })
     getDayHistory(date.toDate(), '', results => {
+      if (!results) {
+        console.error("No Chrome history API found (try again after loading folder as extension):", results)
+        return
+      }
       let chunk = new Chunk(this)
       let chunks = [chunk]
       for (let e of results) {
