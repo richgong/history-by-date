@@ -142,7 +142,7 @@ export default class App extends React.Component {
     })
     getDayHistory(date.toDate(), '', results => {
       if (!results) {
-        console.error("No Chrome history API found (try again after loading folder as extension):", results)
+        console.error("No Chrome history API found: maybe not running as Chrome extension?")
         return
       }
       let domainMap = {}

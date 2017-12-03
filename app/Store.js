@@ -29,10 +29,13 @@ if (chrome.storage && chrome.storage.local) {
     })
   }
 } else {
-  console.error("Chrome storage not available; using localStorage")
+  console.warn("Chrome storage not available; using localStorage")
 
   storageGet = key => {
-    return Promise.resolve(JSON.parse(localStorage.getItem(key)))
+    let item = localStorage.getItem(key)
+    if (item == null)
+      return Promise.reject("Not found in localStorage: " + key)
+    return Promise.resolve(JSON.parse(item))
   }
 
   storageSet = (key, object) => {
