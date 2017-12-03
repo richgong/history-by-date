@@ -9,12 +9,13 @@ import 'react-select/dist/react-select.css'
 export class DomainFilter extends React.Component {
   render() {
     let {options, store} = this.props
-    let {filterEnabled, filters, setFilters_, toggleFilterEnabled_} = store
+    let {filterEnabled, filters, setFilters_, setFilterEnabled_} = store
     return (
       <div className="pad-top-bottom">
         <div>
           <label>
-            <input type="checkbox" checked={filterEnabled} onChange={toggleFilterEnabled_} /> Hide the following domains from results
+            <input type="checkbox" checked={filterEnabled}
+              onChange={e => {setFilterEnabled_(e.target.checked)}} /> Hide the following domains from results
           </label>
         </div>
         <Creatable

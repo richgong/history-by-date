@@ -1,31 +1,78 @@
 import { action, observable, computed } from 'mobx'
 
+export const localKeys = {
+  filterEnabled: 'filterEnabled',
+  filters: 'filters'
+}
+
+let storageGet, storageSet
+
+if (chrome.storage && chrome.storage.local) {
+  storageGet = key => {
+    return new Promise((resolve, reject) => {
+      chrome.storage.local.get(key, items => {
+        if (chrome.runtime.lastError)
+          return reject(chrome.runtime.lastError)
+        return resolve(JSON.parse(items[key]))
+      })
+    })
+  }
+
+  storageSet = (key, object) => {
+    return new Promise((resolve, reject) => {
+      chrome.storage.local.set({[key]: JSON.stringify(object)},
+        () => {
+          if (chrome.runtime.lastError)
+            return reject(chrome.runtime.lastError)
+          return resolve(true)
+        })
+    })
+  }
+} else {
+  console.error("Chrome storage not available; using localStorage")
+
+  storageGet = key => {
+    return Promise.resolve(JSON.parse(localStorage.getItem(key)))
+  }
+
+  storageSet = (key, object) => {
+    return Promise.resolve(localStorage.setItem(key, JSON.stringify(object)))
+  }
+}
+
 export default class Store {
 
 @observable filterEnabled
 @observable filters
-  @observable filterMap
+@observable filterMap
 
   constructor() {
-    this.toggleFilterEnabled_ = this.toggleFilterEnabled_.bind(this)
+    this.setFilterEnabled_ = this.setFilterEnabled_.bind(this)
     this.setFilters_ = this.setFilters_.bind(this)
     this.filterEnabled = true
     this.filters = []
     this.filterMap = {}
+    storageGet('filterEnabled').then(this.setFilterEnabled_).catch(console.error)
+    storageGet('filters').then(this.setFilters_).catch(console.error)
   }
 
 @action
-  toggleFilterEnabled_() {
-    this.filterEnabled = !this.filterEnabled
+  setFilterEnabled_(value) {
+    this.filterEnabled = value
+    storageSet(localKeys.filterEnabled, value)
   }
 
 @action
-  setFilters_(filters) {
-    this.filters = filters
+  setFilters_(rawFilters) {
+
     let filterMap = {}
-    for (let filter of filters) {
+    let filters = []
+    for (let filter of rawFilters) {
       filterMap[filter.domain] = 1
+      filters.push({domain: filter.domain})
     }
     this.filterMap = filterMap
+    this.filters = filters
+    storageSet(localKeys.filters, filters)
   }
 }
