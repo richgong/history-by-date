@@ -17,15 +17,18 @@ So I made this. An open-source extension for browsing your history by date.
 
 ## Features
 
-* Navigate history by date
-* Break usage down by continuous sessions (example: "I used Chrome for 2 hours in the morning, and 3 hours in evening")
+* Navigate browser history by date
+* Break usage down by continuous sessions
+    * See what domains you visited most, per session
+    * Example: "I used Chrome for 3 hours in the morning (mostly StackOverflow), and 2 hours in evening (mostly Gmail)"
 * Calculates total hours spent online each day
 * Filter out specific domains
+    * Example: "Ignore Youtube.com, because I use it for music"
 
 ## Tech
 
 * Bootstrap
-* Chrome extension: storage, history APIs
+* Chrome extension API: storage, history
 * MobX
 * react
 * react-hot-loader
