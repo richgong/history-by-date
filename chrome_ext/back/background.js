@@ -35,5 +35,5 @@ chrome.commands.onCommand.addListener(function(command) {
    */
   console.log('Command:', command);
   if (command == 'open-history-tab')
-    reopen()
+    openHistoryTab()
 });
