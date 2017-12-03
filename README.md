@@ -15,6 +15,21 @@ display ads](https://hotforsecurity.bitdefender.com/blog/better-history-chrome-e
 
 So I made this. An open-source extension for browsing your history by date.
 
+## Features
+
+* Navigate history by date
+* Break usage down by continuous sessions (example: "I used Chrome for 2 hours in the morning, and 3 hours in evening")
+* Calculates total hours spent online each day
+* Filter out specific domains
+
+## Tech
+
+* Bootstrap
+* Chrome extension: storage, history APIs
+* MobX
+* react
+* react-hot-loader
+* react-select
 
 ## Run in development
 
