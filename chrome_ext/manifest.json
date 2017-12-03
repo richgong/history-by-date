@@ -1,20 +1,31 @@
 {
   "name": "History by Date",
   "short_name": "HistoryDate",
-  "version": "1",
+  "version": "1.0.1",
   "manifest_version": 2,
   "browser_action": {
     "default_icon": "dist/logo_128.png",
-    "default_popup": "front/popup.html"
+    "default_title": "History by Date"
   },
+  "background": { "scripts": [ "back/background.js" ] },
   "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:3000 'unsafe-eval'; connect-src http://localhost:3000; img-src 'self' chrome://favicon; style-src 'self' http://localhost:3000 'unsafe-inline'",
   "permissions": [
     "history",
     "storage",
-    "chrome://favicon/"
+    "chrome://favicon/",
+    "tabs"
   ],
   "web_accessible_resources": [ "front/*", "dist/*" ],
   "icons": {
     "128": "dist/logo_128.png"
+  },
+  "commands": {
+    "open-history-tab": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y",
+        "mac": "Command+Shift+Y"
+      },
+      "description": "View browser history"
+    }
   }
 }
