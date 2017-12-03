@@ -112,12 +112,13 @@ class Chunk {
     this.rank = []
   }
 
-  ensureRank() {
+  calcStats() {
     if (this.rank.length || !this.events.length)
       return
     let rank = Object.keys(this.stats).map(key => [key, this.stats[key]])
     rank.sort((a, b) => b[1] - a[1])
     this.rank = rank.slice(0, 5)
+    return (this.endTime - this.startTime)
   }
 
   setState(obj) {
@@ -129,7 +130,7 @@ class Chunk {
     if (!this.startTime || event.lastVisitTime - this.endTime < 15 * 60 * 1000) {
       if (!this.startTime)
         this.startTime = event.lastVisitTime
-      this.endTime = event.lastVisitTime
+      this.endTime = event.lastVisitTime + 30 * 1000
       this.events.push(event)
       if (this.stats[event.domain])
         this.stats[event.domain] += 1
@@ -141,8 +142,7 @@ class Chunk {
     }
   }
 
-  renderControl() {
-    this.ensureRank()
+  renderHeader() {
     let {expanded} = this.state
     return (
       <tr>
@@ -157,17 +157,27 @@ class Chunk {
     )
   }
 
+  renderFooter() {
+    return (
+      <tr>
+        <td className="time">{moment(this.endTime).format('h:mm a')}</td><td></td><td>End of session</td>
+      </tr>
+    )
+  }
+
   render() {
     // render in a function here, instead of in a component to be able to return array, instead of a single element
 
-    let rows = [
-      this.renderControl()
-    ]
+    let rows = []
+
+    rows.push(this.renderHeader())
 
     if (this.state.expanded) {
       for (let event of this.events) {
         rows.push(<EventItem event={event} />)
       }
+
+      rows.push(this.renderFooter())
     }
 
     return rows
@@ -181,7 +191,8 @@ export default class App extends React.Component {
     this.state = {
       date: moment(),
       chunks: [],
-      total: 0
+      total: 0,
+      totalTime: 0
     }
   }
 
@@ -203,16 +214,22 @@ export default class App extends React.Component {
           chunks.push(chunk)
         }
       }
-      this.setState({chunks, total: results.length})
+      let totalTime = 0
+
+      for (let chunk of chunks) {
+        totalTime += chunk.calcStats()
+      }
+
+      this.setState({chunks, totalTime, total: results.length})
     })
   }
 
   render() {
-    let {chunks, date, total} = this.state
+    let {chunks, date, total, totalTime} = this.state
     return (
       <div>
         <DateRange date={date} setDate={this.setDate_} />
-        <h2>{total} things on {date.format('ddd MMM D, YYYY')}</h2>
+        <h2>{total} things ({moment.utc(totalTime).format('H:mm')}) on {date.format('ddd MMM D, YYYY')}</h2>
         <table className="event">
           <tbody>
           {chunks.map(chunk => chunk.render())}
