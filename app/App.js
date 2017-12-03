@@ -145,28 +145,33 @@ export default class App extends React.Component {
         console.error("No Chrome history API found: maybe not running as Chrome extension?")
         return
       }
-      let domainMap = {}
-      let chunk = new Chunk(this)
-      let chunks = [chunk]
-      for (let e of results) {
-        domainMap[e.domain] = 1
-        if (!chunk.add(e)) {
-          chunk = new Chunk(this)
-          chunk.add(e)
-          chunks.push(chunk)
+
+      let chunks = []
+      let totalTime = 0
+      let domains = []
+
+      if (results.length) {
+
+        let domainMap = {}
+        let chunk = new Chunk(this)
+        chunks.push(chunk)
+        for (let e of results) {
+          domainMap[e.domain] = 1
+          if (!chunk.add(e)) {
+            chunk = new Chunk(this)
+            chunk.add(e)
+            chunks.push(chunk)
+          }
+        }
+
+        for (let chunk of chunks) {
+          totalTime += chunk.calcStats()
+        }
+
+        for (let domain in domainMap) {
+          domains.push({domain})
         }
       }
-      let totalTime = 0
-
-      for (let chunk of chunks) {
-        totalTime += chunk.calcStats()
-      }
-
-      let domains = []
-      for (let domain in domainMap) {
-        domains.push({domain})
-      }
-
       this.setState({chunks, totalTime, total: results.length, domains})
     })
   }
