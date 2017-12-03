@@ -2,6 +2,10 @@
 
 A Chrome extension that lets you browse your history by date, instead of infinite scroll.
 
+## Download / Install
+
+It's easy: [download from the Chrome Web Store!](https://chrome.google.com/webstore/detail/history-by-date/cancngpbjlfnkdfeigpododikkpelmfg?hl=en-US&gl=US)
+
 ## Why?
 
 I obsessively track every minute of my time. And I often refer to my Chrome browser history to get a sense of what I
@@ -25,7 +29,9 @@ So I made this. An open-source extension for browsing your history by date.
 * Filter out specific domains
     * Example: "Ignore Youtube.com, because I use it for music"
 
-## Tech
+## For developers
+
+### Tech stack
 
 * Bootstrap
 * Chrome extension API: storage, history
@@ -34,19 +40,19 @@ So I made this. An open-source extension for browsing your history by date.
 * react-hot-loader
 * react-select
 
-## Run in development
+### Run in development
 
 ```
 yarn run start
 ```
 
-## Build
+### Build
 
 ```
 yarn run build
 ```
 
-## Package into ZIP
+### Package into ZIP
 
 ```
 ./ext_publish.sh
