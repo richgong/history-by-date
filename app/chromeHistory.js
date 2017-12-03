@@ -46,13 +46,7 @@ function sanitizeRange(results, options) {
 
 
 function sortByTime(a, b) {
-  let aTime = ensureEventTime(a)
-  let bTime = ensureEventTime(b)
-  if (aTime > bTime)
-    return -1
-  if (aTime < bTime)
-    return 1
-  return 0
+  return ensureEventTime(a) - ensureEventTime(b)
 }
 
 
@@ -69,14 +63,14 @@ function ensureEventTime(result) {
 function groom(results) {
   for (let result of results) {
     if (result.filename) {
-      result.host = getDomain(result.url)
       result.title = getFileName(result.url)
       result.size = calculateMB(result.totalBytes)
     } else {
-      result.host = getDomain(result.url)
+
       if (!result.title)
         result.title = '(No title)'
     }
+    result.domain = getDomain(result.url)
     let regex = /<(.|\n)*?>/ig
     result.title = result.title.replace(regex, "")
     result.url = result.url.replace(regex, "")

@@ -39,7 +39,7 @@ app.use(require('webpack-dev-middleware')(compiled, {
 
 app.use(require('webpack-hot-middleware')(compiled))
 
-//app.get('/', function(req, res) { res.sendFile(path.resolve(__dirname, 'chrome_ext/front/history.html')) });
+//app.get('/', function(req, res) { res.sendFile(path.resolve(__dirname, 'chrome_ext/front/index.html')) });
 
 //app.use('/', express.static('chrome_ext/'))
 

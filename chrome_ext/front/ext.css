@@ -21,9 +21,6 @@ h1 small {
 
 table.event td {
     vertical-align: top;
-}
-
-table.event td {
     padding-bottom: 20px;
 }
 
@@ -31,7 +28,19 @@ table.event td a {
     font-size: 1.2em;
 }
 
-
 li.weekend a, li.weekend a:hover {
     color: #0a0;
+}
+
+td.expand {
+    padding-right: 15px;
+}
+
+.favicon {
+    margin: 5px;
+    width: 16px;
+}
+
+.time {
+    white-space: nowrap;
 }

@@ -81,15 +81,98 @@ class EventItem extends React.Component {
     let {event} = this.props
     return (
       <tr>
+        <td className="time">
+        {moment(event.lastVisitTime).format('h:mm a')}
+        </td>
         <td>
-          <a href={event.url} target="_blank"><img src={event.favicon} /> {event.title}</a>
-          <small className="text-muted"> {event.host} &bull; {event.visitCount} visits</small>
+          <img className="favicon" src={event.favicon} />
+        </td>
+        <td>
+          <a href={event.url} target="_blank">{event.title}
+            <br /><small className="text-muted">
+            {event.url}
+          </small>
+          </a>
         </td>
       </tr>
     )
   }
 }
 
+class Chunk {
+  constructor(component) {
+    this.component = component
+    this.events = []
+    this.startTime = null
+    this.endTime = null
+    this.state = {
+      expanded: false
+    }
+    this.stats = {}
+    this.rank = []
+  }
+
+  ensureRank() {
+    if (this.rank.length || !this.events.length)
+      return
+    let rank = Object.keys(this.stats).map(key => [key, this.stats[key]])
+    rank.sort((a, b) => b[1] - a[1])
+    this.rank = rank.slice(0, 5)
+  }
+
+  setState(obj) {
+    Object.assign(this.state, obj)
+    this.component.setState({_chunkSetState: null}) // force update
+  }
+
+  add(event) {
+    if (!this.startTime || event.lastVisitTime - this.endTime < 15 * 60 * 1000) {
+      if (!this.startTime)
+        this.startTime = event.lastVisitTime
+      this.endTime = event.lastVisitTime
+      this.events.push(event)
+      if (this.stats[event.domain])
+        this.stats[event.domain] += 1
+      else
+        this.stats[event.domain] = 1
+      return true
+    } else {
+      return false
+    }
+  }
+
+  renderControl() {
+    this.ensureRank()
+    let {expanded} = this.state
+    return (
+      <tr>
+        <td className="expand"><button onClick={() => {
+          this.setState({expanded: !expanded})
+        }} className="btn btn-default btn-lg">{expanded ? <span>&minus;</span> : <span>+</span>}</button></td>
+        <td className="expand" colSpan="2">
+          <b>{moment(this.startTime).format('h:mm a')}</b> to <b>{moment(this.endTime).format('h:mm a')}</b> ({moment.utc(this.endTime - this.startTime + 30 * 1000).format('H:mm')})
+          <div className="text-muted"><b>{this.events.length}</b> things: {this.rank.map((r, i) => <span key={i}>{r[0]}={r[1]} </span>)}</div>
+        </td>
+      </tr>
+    )
+  }
+
+  render() {
+    // render in a function here, instead of in a component to be able to return array, instead of a single element
+
+    let rows = [
+      this.renderControl()
+    ]
+
+    if (this.state.expanded) {
+      for (let event of this.events) {
+        rows.push(<EventItem event={event} />)
+      }
+    }
+
+    return rows
+  }
+}
 
 export default class App extends React.Component {
   constructor() {
@@ -97,8 +180,8 @@ export default class App extends React.Component {
     this.setDate_ = this.setDate_.bind(this)
     this.state = {
       date: moment(),
-      events: [],
-      loading: false
+      chunks: [],
+      total: 0
     }
   }
 
@@ -108,24 +191,31 @@ export default class App extends React.Component {
 
   setDate_(date) {
     this.setState({
-      date,
-      events: [],
-      loading: true
+      date
     })
-    getDayHistory(date.toDate(), '', events => {
-      this.setState({events, loading: false})
+    getDayHistory(date.toDate(), '', results => {
+      let chunk = new Chunk(this)
+      let chunks = [chunk]
+      for (let e of results) {
+        if (!chunk.add(e)) {
+          chunk = new Chunk(this)
+          chunk.add(e)
+          chunks.push(chunk)
+        }
+      }
+      this.setState({chunks, total: results.length})
     })
   }
 
   render() {
-    let {events, date, loading} = this.state
+    let {chunks, date, total} = this.state
     return (
       <div>
         <DateRange date={date} setDate={this.setDate_} />
-        <h2>{loading ? 'Loading' : events.length} things on {date.format('ddd MMM D, YYYY')}</h2>
+        <h2>{total} things on {date.format('ddd MMM D, YYYY')}</h2>
         <table className="event">
           <tbody>
-          {events.map((event, i) => <EventItem event={event} key={i} />)}
+          {chunks.map(chunk => chunk.render())}
           </tbody>
         </table>
       </div>
