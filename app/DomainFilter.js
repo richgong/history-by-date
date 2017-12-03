@@ -1,57 +1,33 @@
 import React from 'react'
+import { inject, observer } from 'mobx-react'
 import { Creatable } from 'react-select'
 import 'react-select/dist/react-select.css'
 
 
-let OPTIONS = [
-  {domain:'abc.com'},
-  {domain:'bbc.com'},
-  {domain:'cnn.com'}
-]
-
+@inject('store')
+@observer
 export class DomainFilter extends React.Component {
-  constructor() {
-    super()
-    this.onChange = this.onChange.bind(this)
-    this.toggleEnable = this.toggleEnable.bind(this)
-    this.state = {
-      enabled: true,
-      value: []
-    }
-  }
-
-  onChange(value) {
-    this.setState({
-      value: value
-    });
-  }
-
-  toggleEnable() {
-    this.setState({
-      enabled: !this.state.enabled
-    })
-  }
-
   render() {
-    let {enabled, value} = this.state
+    let {options, store} = this.props
+    let {filterEnabled, filters, setFilters_, toggleFilterEnabled_} = store
     return (
       <div className="pad-top-bottom">
         <div>
           <label>
-            <input type="checkbox" checked={enabled} onChange={this.toggleEnable} /> Hide the following domains from results
+            <input type="checkbox" checked={filterEnabled} onChange={toggleFilterEnabled_} /> Hide the following domains from results
           </label>
         </div>
         <Creatable
+          placeholder="Enter a domain..."
           valueKey="domain"
           labelKey="domain"
           multi
-          value={value}
-          onChange={this.onChange}
-          options={OPTIONS}
+          value={filters.toJSON()}
+          onChange={setFilters_}
+          options={options}
           backspaceRemoves
-          enabled={enabled} />
+          disabled={!filterEnabled} />
       </div>
     );
   }
-
 }

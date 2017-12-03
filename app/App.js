@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import { inject, observer } from 'mobx-react'
 
 import { DateNav } from './DateNav.js'
 import { getDayHistory } from './chromeHistory.js'
@@ -103,8 +104,10 @@ class Chunk {
     rows.push(this.renderHeader())
 
     if (this.state.expanded) {
+      let {filterMap} = window.store
       for (let event of this.events) {
-        rows.push(<EventItem event={event} />)
+        if (!(event.domain in filterMap))
+          rows.push(<EventItem event={event} />)
       }
 
       rows.push(this.renderFooter())
@@ -114,6 +117,8 @@ class Chunk {
   }
 }
 
+@inject('store')
+@observer
 export default class App extends React.Component {
   constructor() {
     super()
@@ -122,7 +127,8 @@ export default class App extends React.Component {
       date: moment(),
       chunks: [],
       total: 0,
-      totalTime: 0
+      totalTime: 0,
+      domains: [{domain: 'google.com'}, {domain: 'facebook.com'}, {domain: 'amazon.com'}]
     }
   }
 
@@ -139,9 +145,11 @@ export default class App extends React.Component {
         console.error("No Chrome history API found (try again after loading folder as extension):", results)
         return
       }
+      let domainMap = {}
       let chunk = new Chunk(this)
       let chunks = [chunk]
       for (let e of results) {
+        domainMap[e.domain] = 1
         if (!chunk.add(e)) {
           chunk = new Chunk(this)
           chunk.add(e)
@@ -154,17 +162,22 @@ export default class App extends React.Component {
         totalTime += chunk.calcStats()
       }
 
-      this.setState({chunks, totalTime, total: results.length})
+      let domains = []
+      for (let domain in domainMap) {
+        domains.push({domain})
+      }
+
+      this.setState({chunks, totalTime, total: results.length, domains})
     })
   }
 
   render() {
-    let {chunks, date, total, totalTime} = this.state
+    let {chunks, date, total, totalTime, domains} = this.state
     return (
       <div>
         <DateNav date={date} setDate={this.setDate_} />
         <h2>{total} things ({moment.utc(totalTime).format('H:mm')}) on {date.format('ddd MMM D, YYYY')}</h2>
-        <DomainFilter />
+        <DomainFilter options={domains} />
         <table className="event">
           <tbody>
           {chunks.map(chunk => chunk.render())}

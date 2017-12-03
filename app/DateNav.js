@@ -34,13 +34,13 @@ export class DateNav extends React.Component {
     let now = new Date()
 
     let dates = []
-    let remain = 11
+    let remain = 13
 
     let future
 
     // add dates after this date
     let curr = date
-    while (dates.length < 6) {
+    while (dates.length < 7) {
       dates.push(curr)
       remain -= 1
       curr = curr.clone().add(1, 'd')
@@ -64,7 +64,7 @@ export class DateNav extends React.Component {
       <ul className="pagination">
         <DateHeader date={past} setDate={setDate}>&larr;</DateHeader>
         {dates.map((d, i) => <DateHeader key={i} date={d} active={d == date} setDate={setDate}>
-          <b>{d.format('ddd')}</b> <br /> {d.format('MMM D')}
+          <b>{d.format('ddd')}</b> <br /> {d.format('M/D')}
         </DateHeader>)}
         <DateHeader date={future} setDate={setDate}>&rarr;</DateHeader>
       </ul>
