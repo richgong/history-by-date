@@ -23,7 +23,7 @@ export class DomainFilter extends React.Component {
           valueKey="domain"
           labelKey="domain"
           multi
-          value={filters.toJSON()}
+          value={filters.toJS()}
           onChange={setFilters_}
           options={options}
           backspaceRemoves

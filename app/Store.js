@@ -13,14 +13,20 @@ if (chrome.storage && chrome.storage.local) {
       chrome.storage.local.get(key, items => {
         if (chrome.runtime.lastError)
           return reject(chrome.runtime.lastError)
-        return resolve(JSON.parse(items[key]))
+        let value = items[key]
+        console.log("Storage.get:", key, value)
+        if (value != null)
+          value = JSON.parse(value)
+        return resolve(value)
       })
     })
   }
 
   storageSet = (key, object) => {
+    let keyValue = {[key]: JSON.stringify(object)}
+    console.log("Storage.set:", keyValue)
     return new Promise((resolve, reject) => {
-      chrome.storage.local.set({[key]: JSON.stringify(object)},
+      chrome.storage.local.set(keyValue,
         () => {
           if (chrome.runtime.lastError)
             return reject(chrome.runtime.lastError)
