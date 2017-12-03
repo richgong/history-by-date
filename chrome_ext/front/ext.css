@@ -28,6 +28,13 @@ table.event td a {
     font-size: 1.2em;
 }
 
+li.date-header a {
+    text-align: center;
+    vertical-align: middle;
+    min-height: 60px;
+    min-width: 80px;
+}
+
 li.weekend a, li.weekend a:hover {
     color: #0a0;
 }

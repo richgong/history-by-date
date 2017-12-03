@@ -1,5 +1,14 @@
 const path = require('path')
 const webpack = require('webpack')
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
+
+
+const IS_PROD = (process.env.NODE_ENV == 'production')
+
+const extractText = new ExtractTextPlugin({
+  filename: "[name].css",
+  disable: !IS_PROD
+});
 
 module.exports = {
   entry: {
@@ -29,7 +38,38 @@ module.exports = {
             babelrc: false
           }
         }
-      }
+      },
+      {
+        test: /\.less$/,
+        use: extractText.extract({
+          use: [{
+            loader: "css-loader"
+          }, {
+            loader: "less-loader"
+          }],
+          // use style-loader in development
+          fallback: "style-loader"
+        })
+      },
+      {
+        test: /\.css$/,
+        use: extractText.extract({
+          use: [{
+            loader: "css-loader"
+          }],
+          // use style-loader in development
+          fallback: "style-loader"
+        })
+      },
+      {
+        test: /\.(png|jpe?g|gif|htm|html|woff2?|eot|ttf|otf|svg)(\?.*)?$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[path][name].[ext]'
+          }
+        }
+      },
     ]
   },
   resolve: {
@@ -43,5 +83,6 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     }),
+    extractText
   ]
 }

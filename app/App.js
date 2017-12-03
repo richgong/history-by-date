@@ -1,79 +1,9 @@
 import React from 'react'
 import moment from 'moment'
 
-import {getDayHistory} from './chromeHistory.js'
-
-function DateItem({active, date, setDate, children}) {
-  let className = ''
-  if (!date)
-    className = 'btn disabled'
-  else if (active)
-    className = 'active'
-
-  let weekday = date && date.day()
-  if (weekday == 0 || weekday == 6) { // sun or sat
-    className += ' weekend'
-  }
-
-  return (
-    <li className={className}>
-      <a href="#" onClick={e => {
-        e.preventDefault()
-        if (date)
-          setDate(date)
-      }}>{children}</a>
-    </li>
-  )
-
-}
-
-class DateRange extends React.Component {
-  constructor() {
-    super()
-  }
-
-  render() {
-    let {date, setDate} = this.props
-    let now = new Date()
-
-    let dates = []
-    let remain = 11
-
-    let future
-
-    // add dates after this date
-    let curr = date
-    while (dates.length < 6) {
-      dates.push(curr)
-      remain -= 1
-      curr = curr.clone().add(1, 'd')
-      future = curr
-      if (curr >= now) {
-        future = null
-        break
-      }
-    }
-
-    curr = date
-    while (remain > 0) {
-      curr = curr.clone().add(-1, 'd')
-      dates.unshift(curr)
-      remain -= 1
-    }
-
-    let past = curr.clone().add(-1, 'd')
-
-    return (
-      <ul className="pagination">
-        <DateItem date={past} setDate={setDate}>&larr;</DateItem>
-        {dates.map((d, i) => <DateItem key={i} date={d} active={d == date} setDate={setDate}>
-          <b>{d.format('ddd')}</b> <br /> {d.format('MMM D')}
-        </DateItem>)}
-        <DateItem date={future} setDate={setDate}>&rarr;</DateItem>
-      </ul>
-    )
-  }
-}
+import { DateNav } from './DateNav.js'
+import { getDayHistory } from './chromeHistory.js'
+import { DomainFilter } from './DomainFilter.js'
 
 
 class EventItem extends React.Component {
@@ -228,8 +158,9 @@ export default class App extends React.Component {
     let {chunks, date, total, totalTime} = this.state
     return (
       <div>
-        <DateRange date={date} setDate={this.setDate_} />
+        <DateNav date={date} setDate={this.setDate_} />
         <h2>{total} things ({moment.utc(totalTime).format('H:mm')}) on {date.format('ddd MMM D, YYYY')}</h2>
+        <DomainFilter />
         <table className="event">
           <tbody>
           {chunks.map(chunk => chunk.render())}
