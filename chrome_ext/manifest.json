@@ -1,5 +1,6 @@
 {
   "name": "History by Date",
+  "short_name": "HistoryDate",
   "version": "1",
   "manifest_version": 2,
   "browser_action": {
