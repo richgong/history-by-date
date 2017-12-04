@@ -67,12 +67,16 @@ export default class Store {
 
 @action
   setFilterEnabled_(value) {
+    if (value == undefined)
+      return
     this.filterEnabled = value
     storageSet(localKeys.filterEnabled, value)
   }
 
 @action
   setFilters_(rawFilters) {
+    if (rawFilters == undefined)
+      return
 
     let filterMap = {}
     let filters = []
