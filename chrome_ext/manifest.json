@@ -1,7 +1,7 @@
 {
   "name": "History by Date",
   "short_name": "HistoryDate",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "manifest_version": 2,
   "browser_action": {
     "default_icon": "dist/logo_128.png",
