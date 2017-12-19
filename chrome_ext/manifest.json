@@ -7,7 +7,10 @@
     "default_icon": "dist/logo_128.png",
     "default_title": "History by Date"
   },
-  "background": { "scripts": [ "back/background.js" ] },
+  "background": {
+    "scripts": ["back/background.js"],
+    "persistent": false
+  },
   "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:3000 'unsafe-eval'; connect-src http://localhost:3000; img-src 'self' chrome://favicon; style-src 'self' http://localhost:3000 'unsafe-inline'",
   "permissions": [
     "history",
@@ -20,7 +23,7 @@
     "128": "dist/logo_128.png"
   },
   "commands": {
-    "open-history-tab": {
+    "_execute_browser_action": {
       "suggested_key": {
         "default": "Ctrl+Shift+Y",
         "mac": "Command+Shift+Y"
