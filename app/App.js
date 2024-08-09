@@ -119,9 +119,9 @@ class Chunk {
     rows.push(this.renderHeader());
 
     if (this.state.expanded) {
-      let { filterEnabled, excludeFilters, includeFilters, filterMap } = window.store;
+      let { excludeFilterOn, includeFilterOn, excludeFilters, includeFilters, filterMap } = window.store;
       for (let event of this.events) {
-        if (!(filterEnabled && event.domain in filterMap))
+        if (!(excludeFilterOn && event.domain in filterMap) && !(includeFilterOn && !(event.domain in filterMap)))
           rows.push(<EventItem event={event} />);
       }
 

@@ -1,22 +1,36 @@
-import React from 'react'
-import { inject, observer } from 'mobx-react'
-import CreatableSelect from 'react-select/creatable';
-import { toJS } from 'mobx'
+import React from "react";
+import { inject, observer } from "mobx-react";
+import CreatableSelect from "react-select/creatable";
+import { toJS } from "mobx";
 // import 'react-select/dist/react-select.css'
-
 
 @observer
 export class DomainFilter extends React.Component {
   render() {
-    let {options} = this.props
-    let store = window.store
-    let {filterEnabled, excludeFilters, includeFilters, setExcludeFilters_, setIncludeFilters_, setFilterEnabled_} = store
+    let { options } = this.props;
+    let store = window.store;
+    let {
+      includeFilterOn,
+      excludeFilterOn,
+      excludeFilters,
+      includeFilters,
+      setExcludeFilters_,
+      setIncludeFilters_,
+      setIncludeFilterOn_,
+      setExcludeFilterOn_,
+    } = store;
     return (
       <div className="pad-top-bottom">
         <div>
           <label>
-            <input type="checkbox" checked={filterEnabled}
-              onChange={e => {setFilterEnabled_(e.target.checked)}} /> Hide the following domains from results
+            <input
+              type="checkbox"
+              checked={excludeFilterOn}
+              onChange={(e) => {
+                setExcludeFilterOn_(e.target.checked);
+              }}
+            />{" "}
+            Hide the following domains from results
           </label>
         </div>
         <CreatableSelect
@@ -26,11 +40,18 @@ export class DomainFilter extends React.Component {
           onChange={setExcludeFilters_}
           options={options}
           backspaceRemoves
-          disabled={!filterEnabled} />
+          disabled={!excludeFilterOn}
+        />
         <div>
           <label>
-            <input type="checkbox" checked={filterEnabled}
-              onChange={e => {setFilterEnabled_(e.target.checked)}} /> Show only the following domains in results
+            <input
+              type="checkbox"
+              checked={includeFilterOn}
+              onChange={(e) => {
+                setIncludeFilterOn_(e.target.checked);
+              }}
+            />{" "}
+            Show only the following domains in results
           </label>
         </div>
         <CreatableSelect
@@ -40,7 +61,8 @@ export class DomainFilter extends React.Component {
           onChange={setIncludeFilters_}
           options={options}
           backspaceRemoves
-          disabled={!filterEnabled} />
+          disabled={!includeFilterOn}
+        />
       </div>
     );
   }
