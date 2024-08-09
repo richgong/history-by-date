@@ -7,6 +7,17 @@ import { getDayHistory } from "./chromeHistory.js";
 import { DomainFilter } from "./DomainFilter.js";
 
 class EventItem extends React.Component {
+  toggleExpandAll() {
+    this.setState((prevState) => {
+      const allExpanded = prevState.chunks.every(chunk => chunk.state.expanded);
+      const newChunks = prevState.chunks.map(chunk => {
+        chunk.setState({ expanded: !allExpanded });
+        return chunk;
+      });
+      return { chunks: newChunks };
+    });
+  }
+
   render() {
     let { event } = this.props;
     return (
@@ -33,6 +44,7 @@ class Chunk {
     this.events = [];
     this.startTime = null;
     this.endTime = null;
+    this.toggleExpandAll = this.toggleExpandAll.bind(this);
     this.state = {
       expanded: false,
     };
@@ -199,6 +211,9 @@ export default class App extends React.Component {
     return (
       <div>
         <DateNav date={date} setDate={this.setDate_} />
+        <button onClick={this.toggleExpandAll} className="btn btn-primary">
+          Toggle Expand All
+        </button>
         <h2>
           {total} things ({moment.utc(totalTime).format("H:mm")}) on{" "}
           {date.format("ddd MMM D, YYYY")}
