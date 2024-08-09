@@ -3,42 +3,42 @@ import { action, observable, computed } from "mobx";
 import { storageGet, storageSet } from "./storage.js";
 
 export default class Store {
-  @observable accessor excludeFilterOn;
-  @observable accessor excludeFilters;
+  @observable accessor domainFilterOn;
+  @observable accessor domainFilters;
   @observable accessor filterMap;
-  @observable accessor searchFilter;
+  @observable accessor search;
 
   constructor() {
-    this.setExcludeFilterOn_ = this.setExcludeFilterOn_.bind(this);
-    this.setExcludeFilters_ = this.setExcludeFilters_.bind(this);
-    this.setIncludeFilter_ = this.setIncludeFilter_.bind(this);
-    this.excludeFilters = [];
+    this.setDomainFilterOn_ = this.setDomainFilterOn_.bind(this);
+    this.setDomainFilters_ = this.setDomainFilters_.bind(this);
+    this.setSearch_ = this.setSearch_.bind(this);
+    this.domainFilters = [];
     this.filterMap = {};
-    this.searchFilter = "";
-    storageGet("excludeFilterOn")
-      .then(this.setExcludeFilterOn_)
+    this.search = "";
+    storageGet("domainFilterOn")
+      .then(this.setDomainFilterOn_)
       .catch(console.error);
-    storageGet("excludeFilters")
-      .then(this.setExcludeFilters_)
+    storageGet("domainFilters")
+      .then(this.setDomainFilters_)
       .catch(console.error);
-    storageGet("searchFilter")
-      .then(this.setIncludeFilter_)
+    storageGet("search")
+      .then(this.setSearch_)
       .catch(console.error);
   }
 
-  @action setIncludeFilter_(value) {
+  @action setSearch_(value) {
     // get lowercase
-    this.searchFilter = (value || '').toLowerCase();
-    storageSet("searchFilter", value);
+    this.search = (value || '').toLowerCase();
+    storageSet("search", value);
   }
 
-  @action setExcludeFilterOn_(value) {
-    this.excludeFilterOn = value;
-    storageSet("excludeFilterOn", value);
+  @action setDomainFilterOn_(value) {
+    this.domainFilterOn = value;
+    storageSet("domainFilterOn", value);
   }
 
-  @action setExcludeFilters_(rawFilters) {
-    console.warn("setExcludeFilters_", rawFilters, typeof rawFilters);
+  @action setDomainFilters_(rawFilters) {
+    console.warn("setDomainFilters_", rawFilters, typeof rawFilters);
     let filterMap = {};
     let filters = [];
     for (let rawFilter of rawFilters) {
@@ -46,7 +46,7 @@ export default class Store {
       filters.push(rawFilter);
     }
     this.filterMap = filterMap;
-    this.excludeFilters = filters;
-    storageSet("excludeFilters", filters);
+    this.domainFilters = filters;
+    storageSet("domainFilters", filters);
   }
 }

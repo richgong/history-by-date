@@ -78,11 +78,11 @@ class Chunk {
     let { expanded, rank } = this;
     let filteredCount = 0;
     let summary = rank.map((r, i) => {
-      let { excludeFilterOn, filterMap } = window.store;
+      let { domainFilterOn, filterMap } = window.store;
       let show = true;
       let domain = r[0];
       let count = r[1];
-      if (excludeFilterOn && domain in filterMap) show = false;
+      if (domainFilterOn && domain in filterMap) show = false;
       if (!show) return null;
       filteredCount += count;
       return (
@@ -144,30 +144,30 @@ class ChunkCell extends React.Component {
 
     let rows = [];
 
-    let { searchFilter } = window.store;
-    if (!searchFilter) rows.push(chunk.renderHeader());
+    let { search } = window.store;
+    if (!search) rows.push(chunk.renderHeader());
 
-    if (chunk.expanded || searchFilter) {
-      let { excludeFilterOn, filterMap } = window.store;
+    if (chunk.expanded || search) {
+      let { domainFilterOn, filterMap } = window.store;
 
       let showing = false;
       for (let event of chunk.events) {
         if (
-          searchFilter &&
+          search &&
           !(
-            event.title.toLowerCase().includes(searchFilter) ||
-            event.url.toLowerCase().includes(searchFilter)
+            event.title.toLowerCase().includes(search) ||
+            event.url.toLowerCase().includes(search)
           )
         ) {
           continue;
         }
-        if (!(excludeFilterOn && event.domain in filterMap)) {
+        if (!(domainFilterOn && event.domain in filterMap)) {
           rows.push(<EventItem event={event} />);
           showing = true;
         }
       }
 
-      if (!searchFilter) rows.push(chunk.renderFooter());
+      if (!search) rows.push(chunk.renderFooter());
     }
 
     return rows;

@@ -10,22 +10,22 @@ export class DomainFilter extends React.Component {
     let { options } = this.props;
     let store = window.store;
     let {
-      excludeFilterOn,
-      excludeFilters,
-      setExcludeFilters_,
-      setExcludeFilterOn_,
+      domainFilterOn,
+      domainFilters,
+      setDomainFilters_,
+      setDomainFilterOn_,
     } = store;
     return (
       <div
-        className={`alert alert-${excludeFilterOn ? "warning" : "secondary"}`}
+        className={`alert alert-${domainFilterOn ? "warning" : "secondary"}`}
       >
         <div>
           <label>
             <input
               type="checkbox"
-              checked={excludeFilterOn}
+              checked={domainFilterOn}
               onChange={(e) => {
-                setExcludeFilterOn_(e.target.checked);
+                setDomainFilterOn_(e.target.checked);
               }}
             />{" "}
             Hide the following domains from results
@@ -34,11 +34,11 @@ export class DomainFilter extends React.Component {
         <CreatableSelect
           placeholder="Enter a domain..."
           isMulti
-          value={toJS(excludeFilters)}
-          onChange={setExcludeFilters_}
+          value={toJS(domainFilters)}
+          onChange={setDomainFilters_}
           options={options}
           backspaceRemoves
-          disabled={!excludeFilterOn}
+          disabled={!domainFilterOn}
           className="bg-success"
         />
       </div>
