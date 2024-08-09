@@ -7,4 +7,4 @@ npm run build && \
 
 echo "
 ==== ALL DONE ====
-To publish: https://chrome.google.com/webstore/devconsole"
+To publish, upload ./chrome_ext.zip here: https://chrome.google.com/webstore/devconsole"
