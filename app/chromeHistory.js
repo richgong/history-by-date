@@ -74,7 +74,7 @@ function groom(results) {
     let regex = /<(.|\n)*?>/ig
     result.title = result.title.replace(regex, "")
     result.url = result.url.replace(regex, "")
-    result.favicon = 'chrome://favicon/' + result.url.replace(/#.*$/, '')
+    result.favicon = `https://${result.domain}/favicon.ico`
   }
   return results
 }
