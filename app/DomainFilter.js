@@ -21,48 +21,57 @@ export class DomainFilter extends React.Component {
     } = store;
     return (
       <div className="pad-top-bottom">
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={excludeFilterOn}
-              onChange={(e) => {
-                setExcludeFilterOn_(e.target.checked);
-              }}
-            />{" "}
-            Hide the following domains from results
-          </label>
+        <div
+          className={`alert alert-${excludeFilterOn ? "info" : "secondary"}`}
+        >
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                checked={excludeFilterOn}
+                onChange={(e) => {
+                  setExcludeFilterOn_(e.target.checked);
+                }}
+              />{" "}
+              Hide the following domains from results
+            </label>
+          </div>
+          <CreatableSelect
+            placeholder="Enter a domain..."
+            isMulti
+            value={toJS(excludeFilters)}
+            onChange={setExcludeFilters_}
+            options={options}
+            backspaceRemoves
+            disabled={!excludeFilterOn}
+            className="bg-success"
+          />
         </div>
-        <CreatableSelect
-          placeholder="Enter a domain..."
-          isMulti
-          value={toJS(excludeFilters)}
-          onChange={setExcludeFilters_}
-          options={options}
-          backspaceRemoves
-          disabled={!excludeFilterOn}
-        />
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={includeFilterOn}
-              onChange={(e) => {
-                setIncludeFilterOn_(e.target.checked);
-              }}
-            />{" "}
-            Show only the following domains in results
-          </label>
+        <div
+          className={`alert alert-${includeFilterOn ? "info" : "secondary"}`}
+        >
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                checked={includeFilterOn}
+                onChange={(e) => {
+                  setIncludeFilterOn_(e.target.checked);
+                }}
+              />{" "}
+              Show only the following domains in results
+            </label>
+          </div>
+          <CreatableSelect
+            placeholder="Enter a domain..."
+            isMulti
+            value={toJS(includeFilters)}
+            onChange={setIncludeFilters_}
+            options={options}
+            backspaceRemoves
+            disabled={!includeFilterOn}
+          />
         </div>
-        <CreatableSelect
-          placeholder="Enter a domain..."
-          isMulti
-          value={toJS(includeFilters)}
-          onChange={setIncludeFilters_}
-          options={options}
-          backspaceRemoves
-          disabled={!includeFilterOn}
-        />
       </div>
     );
   }

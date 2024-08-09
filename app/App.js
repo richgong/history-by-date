@@ -5,19 +5,9 @@ import { inject, observer } from "mobx-react";
 import { DateNav } from "./DateNav.js";
 import { getDayHistory } from "./chromeHistory.js";
 import { DomainFilter } from "./DomainFilter.js";
+import { action, observable } from "mobx";
 
 class EventItem extends React.Component {
-  toggleExpandAll() {
-    this.setState((prevState) => {
-      const allExpanded = prevState.chunks.every(chunk => chunk.state.expanded);
-      const newChunks = prevState.chunks.map(chunk => {
-        chunk.setState({ expanded: !allExpanded });
-        return chunk;
-      });
-      return { chunks: newChunks };
-    });
-  }
-
   render() {
     let { event } = this.props;
     return (
@@ -39,17 +29,14 @@ class EventItem extends React.Component {
 }
 
 class Chunk {
-  constructor(component) {
-    this.component = component;
+  @observable accessor rank = [];
+  @observable accessor expanded = false;
+
+  constructor() {
     this.events = [];
     this.startTime = null;
     this.endTime = null;
-    this.toggleExpandAll = this.toggleExpandAll.bind(this);
-    this.state = {
-      expanded: false,
-    };
     this.stats = {};
-    this.rank = [];
   }
 
   calcStats() {
@@ -60,9 +47,8 @@ class Chunk {
     return this.endTime - this.startTime;
   }
 
-  setState(obj) {
-    Object.assign(this.state, obj);
-    this.component.setState({ _chunkSetState: null }); // force update
+  @action setExpanded(expanded) {
+    this.expanded = expanded;
   }
 
   add(event) {
@@ -82,13 +68,29 @@ class Chunk {
   }
 
   renderHeader() {
-    let { expanded } = this.state;
+    let { expanded, rank } = this;
+    let filteredCount = 0;
+    let summary = rank.map((r, i) => {
+      let { excludeFilterOn, includeFilterOn, filterMap } = window.store;
+      let show = true;
+      let domain = r[0];
+      let count = r[1];
+      if (excludeFilterOn && domain in filterMap) show = false;
+      if (includeFilterOn && !(domain in filterMap)) show = false;
+      if (!show) return null;
+      filteredCount += count;
+      return (
+        <span key={i}>
+          {domain}={count}{" "}
+        </span>
+      );
+    });
     return (
       <tr>
         <td className="expand">
           <button
             onClick={() => {
-              this.setState({ expanded: !expanded });
+              this.setExpanded(!expanded);
             }}
             className="btn btn-default btn-lg"
           >
@@ -101,12 +103,7 @@ class Chunk {
           {moment.utc(this.endTime - this.startTime + 30 * 1000).format("H:mm")}
           )
           <div className="text-muted">
-            <b>{this.events.length}</b> things:{" "}
-            {this.rank.map((r, i) => (
-              <span key={i}>
-                {r[0]}={r[1]}{" "}
-              </span>
-            ))}
+            <b>{filteredCount}</b> things: {summary}
           </div>
         </td>
       </tr>
@@ -122,22 +119,36 @@ class Chunk {
       </tr>
     );
   }
+}
 
+@observer
+class ChunkCell extends React.Component {
   render() {
     // render in a function here, instead of in a component to be able to return array, instead of a single element
 
+    let { chunk } = this.props;
+
     let rows = [];
 
-    rows.push(this.renderHeader());
+    rows.push(chunk.renderHeader());
 
-    if (this.state.expanded) {
-      let { excludeFilterOn, includeFilterOn, excludeFilters, includeFilters, filterMap } = window.store;
-      for (let event of this.events) {
-        if (!(excludeFilterOn && event.domain in filterMap) && !(includeFilterOn && !(event.domain in filterMap)))
+    if (chunk.expanded) {
+      let {
+        excludeFilterOn,
+        includeFilterOn,
+        excludeFilters,
+        includeFilters,
+        filterMap,
+      } = window.store;
+      for (let event of chunk.events) {
+        if (
+          !(excludeFilterOn && event.domain in filterMap) &&
+          !(includeFilterOn && !(event.domain in filterMap))
+        )
           rows.push(<EventItem event={event} />);
       }
 
-      rows.push(this.renderFooter());
+      rows.push(chunk.renderFooter());
     }
 
     return rows;
@@ -163,6 +174,14 @@ export default class App extends React.Component {
 
   componentDidMount() {
     this.setDate_(this.state.date);
+  }
+
+  toggleExpandAll() {
+    let { chunks } = this.state;
+    let expanded = chunks.length && !chunks[0].expanded;
+    for (let chunk of chunks) {
+      chunk.setExpanded(expanded);
+    }
   }
 
   setDate_(date) {
@@ -211,16 +230,29 @@ export default class App extends React.Component {
     return (
       <div>
         <DateNav date={date} setDate={this.setDate_} />
-        <button onClick={this.toggleExpandAll} className="btn btn-primary">
-          Toggle Expand All
-        </button>
         <h2>
           {total} things ({moment.utc(totalTime).format("H:mm")}) on{" "}
           {date.format("ddd MMM D, YYYY")}
         </h2>
-        <DomainFilter options={domains} includeFilters={window.store.includeFilters} />
+        <button
+          onClick={(e) => {
+            this.toggleExpandAll();
+          }}
+          className="btn btn-outline-secondary"
+        >
+          {chunks.length && chunks[0].expanded ? "Collapse" : "Expand"}{" "}
+          all
+        </button>
+        <DomainFilter
+          options={domains}
+          includeFilters={window.store.includeFilters}
+        />
         <table className="event">
-          <tbody>{chunks.map((chunk) => chunk.render())}</tbody>
+          <tbody>
+            {chunks.map((chunk, i) => (
+              <ChunkCell chunk={chunk} key={i} />
+            ))}
+          </tbody>
         </table>
       </div>
     );
