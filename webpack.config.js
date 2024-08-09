@@ -1,24 +1,23 @@
-const path = require('path')
-const webpack = require('webpack')
-const ExtractTextPlugin = require("extract-text-webpack-plugin")
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require("path");
+const webpack = require("webpack");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
+const IS_PROD = process.env.NODE_ENV == "production";
 
-const IS_PROD = (process.env.NODE_ENV == 'production')
-
-const extractText = new ExtractTextPlugin({
+const miniCssExtractPlugin = new MiniCssExtractPlugin({
   filename: "[name].css",
-  disable: !IS_PROD
 });
 
 module.exports = {
   entry: {
-    loadApp: './app/loadApp'
+    loadApp: "./app/loadApp",
   },
   output: {
-    path: path.resolve(__dirname, 'chrome_ext/dist'),
-    filename: '[name].js',
-    library: '[name]'
+    path: path.resolve(__dirname, "chrome_ext/dist"),
+    filename: "[name].js",
+    library: "[name]",
   },
   module: {
     rules: [
@@ -26,68 +25,52 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [ // order matters (runs last to first)
-              ['es2015', { modules: false }],
-              'stage-2',
-              'react'
-            ],
-            plugins: [
-              "transform-decorators-legacy" // for Mobx decorators like @observer
-            ],
-            babelrc: false
-          }
-        }
+          loader: "babel-loader",
+        },
       },
       {
         test: /\.less$/,
-        use: extractText.extract({
-          use: [{
-            loader: "css-loader"
-          }, {
-            loader: "less-loader"
-          }],
-          // use style-loader in development
-          fallback: "style-loader"
-        })
+        use: [
+          IS_PROD ? MiniCssExtractPlugin.loader : "style-loader",
+          "css-loader",
+          "less-loader",
+        ],
       },
       {
         test: /\.css$/,
-        use: extractText.extract({
-          use: [{
-            loader: "css-loader"
-          }],
-          // use style-loader in development
-          fallback: "style-loader"
-        })
+        use: [
+          IS_PROD ? MiniCssExtractPlugin.loader : "style-loader",
+          "css-loader",
+        ],
       },
       {
         test: /\.(png|jpe?g|gif|htm|html|woff2?|eot|ttf|otf|svg)(\?.*)?$/,
         use: {
-          loader: 'file-loader',
+          loader: "file-loader",
           options: {
-            name: '[path][name].[ext]'
-          }
-        }
+            name: "[path][name].[ext]",
+          },
+        },
       },
-    ]
+    ],
   },
   resolve: {
     alias: {
-      '~': path.resolve(__dirname)
+      "~": path.resolve(__dirname),
     },
-    extensions: ['.js']
+    extensions: [".js", ".jsx"],
   },
-  devtool: 'eval',
+  devtool: "eval",
+  devServer: {
+    hot: true,
+    allowedHosts: "all",
+  },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-    }),
-    extractText,
+    miniCssExtractPlugin,
+    IS_PROD ? null : new ReactRefreshWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './app/index.ejs',
-      filename: 'index.html'
-    })
-  ]
-}
+      template: "./app/index.ejs",
+      filename: "index.html",
+    }),
+  ],
+};

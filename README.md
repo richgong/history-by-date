@@ -37,7 +37,6 @@ So I made this. An open-source extension for browsing your history by date.
 * Chrome extension API: storage, history
 * MobX
 * react
-* react-hot-loader
 * react-select
 
 ### Run in development

@@ -10,9 +10,9 @@ export const localKeys = {
 
 export default class Store {
 
-@observable filterEnabled
-@observable filters
-@observable filterMap
+@observable accessor filterEnabled
+@observable accessor filters
+@observable accessor filterMap
 
   constructor() {
     this.setFilterEnabled_ = this.setFilterEnabled_.bind(this)

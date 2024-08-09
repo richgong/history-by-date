@@ -1,23 +1,15 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { AppContainer } from 'react-hot-loader'
-import { Provider } from 'mobx-react'
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { Provider } from "mobx-react";
 
-import App from './App.js'
-import Store from './Store.js'
+import App from "./App.js";
+import Store from "./Store.js";
 
-window.store = new Store()
+let store = new Store();
+window.store = store;
 
-function render() {
-  ReactDOM.render(
-    <AppContainer><Provider store={store}>
-      <App />
-    </Provider></AppContainer>,
-    document.getElementById('app')
-  )
-}
-
-render()
-
-if (module.hot)
-  module.hot.accept('./App.js', render)
+createRoot(document.getElementById("app")).render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+);

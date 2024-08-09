@@ -117,7 +117,6 @@ class Chunk {
   }
 }
 
-@inject('store')
 @observer
 export default class App extends React.Component {
   constructor() {
