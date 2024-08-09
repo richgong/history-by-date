@@ -62,7 +62,3 @@ npm run build
 ```
 ./ext_publish.sh
 ```
-
-### Publish
-
-Go here: https://chrome.google.com/webstore/devconsole

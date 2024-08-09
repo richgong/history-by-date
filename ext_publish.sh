@@ -3,3 +3,8 @@
 npm run build && \
 	rm -f chrome_ext.zip && \
 	zip -r chrome_ext.zip chrome_ext
+
+
+echo "
+==== ALL DONE ====
+To publish: https://chrome.google.com/webstore/devconsole"

@@ -111,10 +111,10 @@ class App extends React.Component {
       window.store;
     return (
       <div className="container">
-        <h1 class="text-center my-3">
+        <h3 class="text-center my-3">
           <img src="/dist/logo_128.png" class="logo me-2 v-align" />
           History by Date
-        </h1>
+        </h3>
         <DateNav date={date} setDate={window.store.setDate_} />
         <h2
           className={totalFiltered < total ? "text-success" : "text-secondary"}
