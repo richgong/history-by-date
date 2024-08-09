@@ -16,33 +16,31 @@ export class DomainFilter extends React.Component {
       setExcludeFilterOn_,
     } = store;
     return (
-      <div className="pad-top-bottom">
-        <div
-          className={`alert alert-${excludeFilterOn ? "warning" : "secondary"}`}
-        >
-          <div>
-            <label>
-              <input
-                type="checkbox"
-                checked={excludeFilterOn}
-                onChange={(e) => {
-                  setExcludeFilterOn_(e.target.checked);
-                }}
-              />{" "}
-              Hide the following domains from results
-            </label>
-          </div>
-          <CreatableSelect
-            placeholder="Enter a domain..."
-            isMulti
-            value={toJS(excludeFilters)}
-            onChange={setExcludeFilters_}
-            options={options}
-            backspaceRemoves
-            disabled={!excludeFilterOn}
-            className="bg-success"
-          />
+      <div
+        className={`alert alert-${excludeFilterOn ? "warning" : "secondary"}`}
+      >
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={excludeFilterOn}
+              onChange={(e) => {
+                setExcludeFilterOn_(e.target.checked);
+              }}
+            />{" "}
+            Hide the following domains from results
+          </label>
         </div>
+        <CreatableSelect
+          placeholder="Enter a domain..."
+          isMulti
+          value={toJS(excludeFilters)}
+          onChange={setExcludeFilters_}
+          options={options}
+          backspaceRemoves
+          disabled={!excludeFilterOn}
+          className="bg-success"
+        />
       </div>
     );
   }

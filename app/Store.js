@@ -11,7 +11,7 @@ export default class Store {
   constructor() {
     this.setExcludeFilterOn_ = this.setExcludeFilterOn_.bind(this);
     this.setExcludeFilters_ = this.setExcludeFilters_.bind(this);
-    this.excludeFilterOn = true;
+    this.setIncludeFilter_ = this.setIncludeFilter_.bind(this);
     this.excludeFilters = [];
     this.filterMap = {};
     this.includeFilter = "";
@@ -21,6 +21,14 @@ export default class Store {
     storageGet("excludeFilters")
       .then(this.setExcludeFilters_)
       .catch(console.error);
+    storageGet("includeFilter")
+      .then(this.setIncludeFilter_)
+      .catch(console.error);
+  }
+
+  @action setIncludeFilter_(value) {
+    this.includeFilter = value;
+    storageSet("includeFilter", value);
   }
 
   @action setExcludeFilterOn_(value) {

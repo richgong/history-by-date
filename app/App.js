@@ -1,11 +1,12 @@
 import React from "react";
 import moment from "moment";
 import { inject, observer } from "mobx-react";
+import { observable, action } from "mobx";
 
 import { DateNav } from "./DateNav.js";
 import { getDayHistory } from "./chromeHistory.js";
 import { DomainFilter } from "./DomainFilter.js";
-import { action, observable } from "mobx";
+import { SearchFilter } from "./SearchFilter.js";
 
 function EventItem({ event }) {
   // error on image
@@ -143,20 +144,28 @@ class ChunkCell extends React.Component {
 
     let rows = [];
 
-    rows.push(chunk.renderHeader());
+    let { includeFilter } = window.store;
+    if (!includeFilter) rows.push(chunk.renderHeader());
 
-    if (chunk.expanded) {
+    if (chunk.expanded || includeFilter) {
       let { excludeFilterOn, filterMap } = window.store;
-      let { includeFilter } = window.store;
+
+      let showing = false;
       for (let event of chunk.events) {
-        if (includeFilter && !event.title.toLowerCase().includes(includeFilter.toLowerCase())) {
+        if (
+          includeFilter &&
+          !event.title.toLowerCase().includes(includeFilter.toLowerCase())
+        ) {
           continue;
         }
-        if (!(excludeFilterOn && event.domain in filterMap))
+        if (!(excludeFilterOn && event.domain in filterMap)) {
           rows.push(<EventItem event={event} />);
+          showing = true;
+        }
+          
       }
 
-      rows.push(chunk.renderFooter());
+      if (!includeFilter) rows.push(chunk.renderFooter());
     }
 
     return rows;
@@ -247,7 +256,7 @@ export default class App extends React.Component {
             this.toggleExpandAll();
           }}
           className={
-            "btn " +
+            "my-2 btn " +
             (chunks.length && chunks[0].expanded
               ? "btn-secondary"
               : "btn-light")
@@ -259,7 +268,14 @@ export default class App extends React.Component {
             <>+ Expand all</>
           )}
         </button>
-        <DomainFilter options={domains} />
+        <div className="d-flex align-items-center gap-2">
+          <div className="flex-grow-1">
+            <DomainFilter options={domains} />
+          </div>
+          <div>
+            <SearchFilter />
+          </div>
+        </div>
         <table className="event">
           <tbody>
             {chunks.map((chunk, i) => (
