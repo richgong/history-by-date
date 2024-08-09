@@ -27,7 +27,8 @@ export default class Store {
   }
 
   @action setIncludeFilter_(value) {
-    this.includeFilter = value;
+    // get lowercase
+    this.includeFilter = (value || '').toLowerCase();
     storageSet("includeFilter", value);
   }
 

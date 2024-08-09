@@ -154,7 +154,10 @@ class ChunkCell extends React.Component {
       for (let event of chunk.events) {
         if (
           includeFilter &&
-          !event.title.toLowerCase().includes(includeFilter.toLowerCase())
+          !(
+            event.title.toLowerCase().includes(includeFilter) ||
+            event.url.toLowerCase().includes(includeFilter)
+          )
         ) {
           continue;
         }
@@ -162,7 +165,6 @@ class ChunkCell extends React.Component {
           rows.push(<EventItem event={event} />);
           showing = true;
         }
-          
       }
 
       if (!includeFilter) rows.push(chunk.renderFooter());
