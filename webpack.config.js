@@ -6,6 +6,8 @@ const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin"
 
 const IS_PROD = process.env.NODE_ENV == "production";
 
+console.log("==== IS_PROD:", IS_PROD);
+
 const miniCssExtractPlugin = new MiniCssExtractPlugin({
   filename: "[name].css",
 });
@@ -26,6 +28,14 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-react"],
+            plugins: [
+              ["@babel/plugin-proposal-decorators", { version: "2023-05" }],
+              ...(IS_PROD ? [] : ["react-refresh/babel"]),
+            ],
+            babelrc: false,
+          },
         },
       },
       {
@@ -60,17 +70,19 @@ module.exports = {
     },
     extensions: [".js", ".jsx"],
   },
-  devtool: "eval",
+  devtool: "source-map",
   devServer: {
     hot: true,
     allowedHosts: "all",
   },
   plugins: [
-    miniCssExtractPlugin,
-    IS_PROD ? null : new ReactRefreshWebpackPlugin(),
-    new HtmlWebpackPlugin({
-      template: "./app/index.ejs",
-      filename: "index.html",
-    }),
+    ...(IS_PROD ? [] : [new ReactRefreshWebpackPlugin()]),
+    ...[
+      miniCssExtractPlugin,
+      new HtmlWebpackPlugin({
+        template: "./app/index.ejs",
+        filename: "index.html",
+      }),
+    ],
   ],
 };
