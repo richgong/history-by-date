@@ -6,14 +6,14 @@ import { toJS } from "mobx";
 export class SearchFilter extends React.Component {
   render() {
     let store = window.store;
-    let { includeFilter, setIncludeFilter_ } = store;
+    let { searchFilter, setIncludeFilter_ } = store;
     return (
-      <div className={`alert alert-${includeFilter ? "success" : "secondary"}`}>
+      <div className={`alert alert-${searchFilter ? "success" : "secondary"}`}>
         Search this date:
         <div className="input-group">
           <input
             type="text"
-            value={includeFilter}
+            value={searchFilter}
             onChange={(e) => {
               setIncludeFilter_(e.target.value);
             }}
@@ -21,7 +21,7 @@ export class SearchFilter extends React.Component {
             className="form-control"
             style={{ position: "relative" }}
           />
-          {includeFilter && (
+          {searchFilter && (
             <span
               className="position-absolute top-50 end-0 translate-middle-y me-2"
               style={{ cursor: "pointer" }}

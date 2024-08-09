@@ -144,19 +144,19 @@ class ChunkCell extends React.Component {
 
     let rows = [];
 
-    let { includeFilter } = window.store;
-    if (!includeFilter) rows.push(chunk.renderHeader());
+    let { searchFilter } = window.store;
+    if (!searchFilter) rows.push(chunk.renderHeader());
 
-    if (chunk.expanded || includeFilter) {
+    if (chunk.expanded || searchFilter) {
       let { excludeFilterOn, filterMap } = window.store;
 
       let showing = false;
       for (let event of chunk.events) {
         if (
-          includeFilter &&
+          searchFilter &&
           !(
-            event.title.toLowerCase().includes(includeFilter) ||
-            event.url.toLowerCase().includes(includeFilter)
+            event.title.toLowerCase().includes(searchFilter) ||
+            event.url.toLowerCase().includes(searchFilter)
           )
         ) {
           continue;
@@ -167,7 +167,7 @@ class ChunkCell extends React.Component {
         }
       }
 
-      if (!includeFilter) rows.push(chunk.renderFooter());
+      if (!searchFilter) rows.push(chunk.renderFooter());
     }
 
     return rows;
