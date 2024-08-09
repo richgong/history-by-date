@@ -10,7 +10,7 @@ export class DomainFilter extends React.Component {
   render() {
     let {options} = this.props
     let store = window.store
-    let {filterEnabled, filters, setFilters_, setFilterEnabled_} = store
+    let {filterEnabled, excludeFilters, includeFilters, setExcludeFilters_, setIncludeFilters_, setFilterEnabled_} = store
     return (
       <div className="pad-top-bottom">
         <div>
@@ -22,8 +22,22 @@ export class DomainFilter extends React.Component {
         <CreatableSelect
           placeholder="Enter a domain..."
           isMulti
-          value={toJS(filters)}
-          onChange={setFilters_}
+          value={toJS(excludeFilters)}
+          onChange={setExcludeFilters_}
+          options={options}
+          backspaceRemoves
+          disabled={!filterEnabled} />
+        <div>
+          <label>
+            <input type="checkbox" checked={filterEnabled}
+              onChange={e => {setFilterEnabled_(e.target.checked)}} /> Show only the following domains in results
+          </label>
+        </div>
+        <CreatableSelect
+          placeholder="Enter a domain..."
+          isMulti
+          value={toJS(includeFilters)}
+          onChange={setIncludeFilters_}
           options={options}
           backspaceRemoves
           disabled={!filterEnabled} />

@@ -119,7 +119,7 @@ class Chunk {
     rows.push(this.renderHeader());
 
     if (this.state.expanded) {
-      let { filterEnabled, filterMap } = window.store;
+      let { filterEnabled, excludeFilters, includeFilters, filterMap } = window.store;
       for (let event of this.events) {
         if (!(filterEnabled && event.domain in filterMap))
           rows.push(<EventItem event={event} />);
@@ -203,7 +203,7 @@ export default class App extends React.Component {
           {total} things ({moment.utc(totalTime).format("H:mm")}) on{" "}
           {date.format("ddd MMM D, YYYY")}
         </h2>
-        <DomainFilter options={domains} />
+        <DomainFilter options={domains} includeFilters={window.store.includeFilters} />
         <table className="event">
           <tbody>{chunks.map((chunk) => chunk.render())}</tbody>
         </table>
