@@ -7,25 +7,31 @@ import { getDayHistory } from "./chromeHistory.js";
 import { DomainFilter } from "./DomainFilter.js";
 import { action, observable } from "mobx";
 
-class EventItem extends React.Component {
-  render() {
-    let { event } = this.props;
-    return (
-      <tr>
-        <td className="time">{moment(event.lastVisitTime).format("h:mm a")}</td>
-        <td>
-          <img className="favicon" src={event.favicon} />
-        </td>
-        <td>
-          <a href={event.url} target="_blank">
-            {event.title}
-            <br />
-            <small className="text-muted">{event.url}</small>
-          </a>
-        </td>
-      </tr>
-    );
-  }
+function EventItem({ event }) {
+  // error on image
+  let [error, setError] = React.useState(false);
+  return (
+    <tr>
+      <td className="time">{moment(event.lastVisitTime).format("h:mm a")}</td>
+      <td>
+        <img
+          className="favicon"
+          src={error ? "/dist/blank.png" : event.favicon}
+          alt="favicon"
+          onError={(e) => {
+            setError(true);
+          }}
+        />
+      </td>
+      <td>
+        <a href={event.url} target="_blank">
+          {event.title}
+          <br />
+          <small className="muted">{event.url}</small>
+        </a>
+      </td>
+    </tr>
+  );
 }
 
 class Chunk {
@@ -71,12 +77,11 @@ class Chunk {
     let { expanded, rank } = this;
     let filteredCount = 0;
     let summary = rank.map((r, i) => {
-      let { excludeFilterOn, includeFilterOn, filterMap } = window.store;
+      let { excludeFilterOn, filterMap } = window.store;
       let show = true;
       let domain = r[0];
       let count = r[1];
       if (excludeFilterOn && domain in filterMap) show = false;
-      if (includeFilterOn && !(domain in filterMap)) show = false;
       if (!show) return null;
       filteredCount += count;
       return (
@@ -92,9 +97,17 @@ class Chunk {
             onClick={() => {
               this.setExpanded(!expanded);
             }}
-            className="btn btn-default btn-lg"
+            className={"btn btn " + (expanded ? "btn-secondary" : "btn-light")}
           >
-            {expanded ? <span>&minus;</span> : <span>+</span>}
+            <span
+              style={{
+                display: "inline-block",
+                width: "20px",
+                textAlign: "center",
+              }}
+            >
+              {expanded ? <>&minus;</> : "+"}
+            </span>
           </button>
         </td>
         <td className="expand" colSpan="2">
@@ -133,18 +146,13 @@ class ChunkCell extends React.Component {
     rows.push(chunk.renderHeader());
 
     if (chunk.expanded) {
-      let {
-        excludeFilterOn,
-        includeFilterOn,
-        excludeFilters,
-        includeFilters,
-        filterMap,
-      } = window.store;
+      let { excludeFilterOn, filterMap } = window.store;
+      let { includeFilter } = window.store;
       for (let event of chunk.events) {
-        if (
-          !(excludeFilterOn && event.domain in filterMap) &&
-          !(includeFilterOn && !(event.domain in filterMap))
-        )
+        if (includeFilter && !event.title.toLowerCase().includes(includeFilter.toLowerCase())) {
+          continue;
+        }
+        if (!(excludeFilterOn && event.domain in filterMap))
           rows.push(<EventItem event={event} />);
       }
 
@@ -238,15 +246,20 @@ export default class App extends React.Component {
           onClick={(e) => {
             this.toggleExpandAll();
           }}
-          className="btn btn-outline-secondary"
+          className={
+            "btn " +
+            (chunks.length && chunks[0].expanded
+              ? "btn-secondary"
+              : "btn-light")
+          }
         >
-          {chunks.length && chunks[0].expanded ? "Collapse" : "Expand"}{" "}
-          all
+          {chunks.length && chunks[0].expanded ? (
+            <>&minus; Collapse all</>
+          ) : (
+            <>+ Expand all</>
+          )}
         </button>
-        <DomainFilter
-          options={domains}
-          includeFilters={window.store.includeFilters}
-        />
+        <DomainFilter options={domains} />
         <table className="event">
           <tbody>
             {chunks.map((chunk, i) => (

@@ -1,7 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 const IS_PROD = process.env.NODE_ENV == "production";
@@ -79,10 +78,6 @@ module.exports = {
     ...(IS_PROD ? [] : [new ReactRefreshWebpackPlugin()]),
     ...[
       miniCssExtractPlugin,
-      new HtmlWebpackPlugin({
-        template: "./app/index.ejs",
-        filename: "index.html",
-      }),
     ],
   ],
 };

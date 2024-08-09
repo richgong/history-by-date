@@ -10,19 +10,15 @@ export class DomainFilter extends React.Component {
     let { options } = this.props;
     let store = window.store;
     let {
-      includeFilterOn,
       excludeFilterOn,
       excludeFilters,
-      includeFilters,
       setExcludeFilters_,
-      setIncludeFilters_,
-      setIncludeFilterOn_,
       setExcludeFilterOn_,
     } = store;
     return (
       <div className="pad-top-bottom">
         <div
-          className={`alert alert-${excludeFilterOn ? "info" : "secondary"}`}
+          className={`alert alert-${excludeFilterOn ? "warning" : "secondary"}`}
         >
           <div>
             <label>
@@ -45,31 +41,6 @@ export class DomainFilter extends React.Component {
             backspaceRemoves
             disabled={!excludeFilterOn}
             className="bg-success"
-          />
-        </div>
-        <div
-          className={`alert alert-${includeFilterOn ? "info" : "secondary"}`}
-        >
-          <div>
-            <label>
-              <input
-                type="checkbox"
-                checked={includeFilterOn}
-                onChange={(e) => {
-                  setIncludeFilterOn_(e.target.checked);
-                }}
-              />{" "}
-              Show only the following domains in results
-            </label>
-          </div>
-          <CreatableSelect
-            placeholder="Enter a domain..."
-            isMulti
-            value={toJS(includeFilters)}
-            onChange={setIncludeFilters_}
-            options={options}
-            backspaceRemoves
-            disabled={!includeFilterOn}
           />
         </div>
       </div>

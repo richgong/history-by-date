@@ -1,0 +1,61 @@
+* {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.padded {
+  padding: 10px;
+}
+
+.pad-top-bottom {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.v-align {
+    vertical-align: middle;
+}
+
+.logo {
+  height: 40px;
+  margin-right: 10px;
+}
+
+h1 small {
+  font-size: 0.5em;
+}
+
+table.event td {
+  vertical-align: top;
+  padding-bottom: 20px;
+}
+
+table.event td a {
+  font-size: 1.2em;
+}
+
+li.page-item a {
+  text-align: center;
+  vertical-align: middle;
+  min-height: 60px;
+  min-width: 70px;
+}
+
+li.bg-warning a,
+li.bg-warning a:hover {
+  color: #0a0;
+}
+
+td.expand {
+  padding-right: 15px;
+}
+
+.favicon {
+  margin: 5px;
+  width: 16px;
+}
+
+.time {
+  white-space: nowrap;
+}
