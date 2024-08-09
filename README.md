@@ -42,13 +42,19 @@ So I made this. An open-source extension for browsing your history by date.
 ### Run in development
 
 ```
-yarn run start
+npm run start
+
+# or, if you want to see it rendered
+./run.sh
 ```
 
 ### Build
 
 ```
-yarn run build
+npm run build
+
+# or for brevity
+./build.sh
 ```
 
 ### Package into ZIP
