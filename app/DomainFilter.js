@@ -21,9 +21,7 @@ export class DomainFilter extends React.Component {
         </div>
         <CreatableSelect
           placeholder="Enter a domain..."
-          valueKey="domain"
-          labelKey="domain"
-          multi
+          isMulti
           value={toJS(filters)}
           onChange={setFilters_}
           options={options}

@@ -127,7 +127,7 @@ export default class App extends React.Component {
       chunks: [],
       total: 0,
       totalTime: 0,
-      domains: [{domain: 'google.com'}, {domain: 'facebook.com'}, {domain: 'amazon.com'}]
+      domains: ['google.com', 'facebook.com'].map(domain => ({ label: domain, value: domain}))
     }
   }
 
