@@ -11,9 +11,11 @@ webpackConfig.mode = mode; // Pass mode to webpack config
 const compiler = webpack(webpackConfig);
 
 // Use webpack-dev-middleware
+let publicPath = webpackConfig.output.publicPath;
+console.log('===== publicPath:', publicPath);
 app.use(
   webpackDevMiddleware(compiler, {
-    publicPath: webpackConfig.output.publicPath,
+    publicPath,
   })
 );
 

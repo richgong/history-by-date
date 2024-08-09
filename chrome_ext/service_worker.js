@@ -1,7 +1,7 @@
 console.log("history-by-date's background.js loaded")
 
 function openHistoryTab() {
-  var indexUrl = chrome.runtime.getURL('/index.html');
+  var indexUrl = chrome.runtime.getURL('/index-production.html');
 
   chrome.tabs.query({url: indexUrl}, function(tabs) {
     if (tabs.length) {

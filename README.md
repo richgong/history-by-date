@@ -44,7 +44,7 @@ So I made this. An open-source extension for browsing your history by date.
 ```
 npm run start
 
-# or, if you want to see it rendered
+# or, if you want to see it rendered outside of Chrome Extensions
 ./run.sh
 ```
 
@@ -62,3 +62,7 @@ npm run build
 ```
 ./ext_publish.sh
 ```
+
+### Publish
+
+Go here: https://chrome.google.com/webstore/devconsole

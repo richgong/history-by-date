@@ -110,9 +110,15 @@ class App extends React.Component {
     let { chunks, date, total, totalTime, domains, totalFiltered } =
       window.store;
     return (
-      <div>
+      <div className="container">
+        <h1 class="text-center my-3">
+          <img src="/dist/logo_128.png" class="logo me-2 v-align" />
+          History by Date
+        </h1>
         <DateNav date={date} setDate={window.store.setDate_} />
-        <h2 className={totalFiltered < total ? "text-success" : "text-secondary"}>
+        <h2
+          className={totalFiltered < total ? "text-success" : "text-secondary"}
+        >
           Showing {totalFiltered} of {total} things (
           {moment.utc(totalTime).format("H:mm")}) on{" "}
           {date.format("ddd MMM D, YYYY")}
@@ -149,6 +155,13 @@ class App extends React.Component {
             ))}
           </tbody>
         </table>
+        <hr />
+        <small>
+          This extension is open-source:{" "}
+          <a href="https://github.com/richgong/history-by-date">
+            https://github.com/richgong/history-by-date
+          </a>
+        </small>
       </div>
     );
   }
