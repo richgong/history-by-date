@@ -37,15 +37,23 @@ app.use(require('webpack-dev-middleware')(compiled, {
   publicPath: publicPath
 }))
 
-app.use(require('webpack-hot-middleware')(compiled))
+app.use(require('webpack-hot-middleware')(compiled, {
+  log: console.log,
+  path: '/__webpack_hmr',
+  heartbeat: 10 * 1000
+}))
 
 //app.get('/', function(req, res) { res.sendFile(path.resolve(__dirname, 'chrome_ext/front/index.html')) });
 
-app.use('/', express.static('chrome_ext/'))
+app.use(express.static(path.join(__dirname, 'chrome_ext')));
 
 
 app.listen(port, 'localhost', function(err) {
+  if (err) {
+    console.error('Error starting server:', err);
+    return;
+  }
   if (err)
     return console.error(err)
-  console.log('HotLoader running on port', port)
+  console.log(`HotLoader running on http://localhost:${port}`)
 })
