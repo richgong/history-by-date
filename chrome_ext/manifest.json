@@ -4,7 +4,6 @@
   "version": "2.0.0",
   "manifest_version": 3,
   "background": {
-    "persistent": false,
     "service_worker": "service_worker.js"
   },
   "permissions": [
@@ -27,10 +26,10 @@
     "128": "dist/logo_128.png"
   },
   "commands": {
-    "_execute_browser_action": {
+    "_execute_action": {
       "suggested_key": {
-        "default": "Ctrl+Shift+Y",
-        "mac": "Command+Shift+Y"
+        "default": "Ctrl+Y",
+        "mac": "Command+Y"
       },
       "description": "View browser history"
     }
@@ -39,7 +38,5 @@
     "default_icon": "dist/logo_128.png",
     "default_title": "History by Date"
   },
-  "host_permissions": [
-    "chrome://favicon/"
-  ]
+  "host_permissions": []
 }
